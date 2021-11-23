@@ -1,6 +1,20 @@
-from pandas import DataFrame, read_excel
+from pandas import DataFrame, read_csv
 import numpy as np
-from sklearn import linear_model
+from scipy.optimize import curve_fit
+#*----------------------------------------------------------------功能型函数
+def data_read(path="data.txt",sep="\t",head=0,):
+    """
+    #*用pandas读取txt文件，间隔默认为'\t',默认没有表头
+    """
+    df=read_csv(path,sep=sep,header=head,dtype=np.float64)
+    df=df.values.transpose()
+    return df
+
+
+def data_write(data,path="data.txt",sep='\t'):
+    df=DataFrame(data.transpose(),columns=['x','y'])
+    df.to_csv(path,sep=sep,index=False)
+
 
 def data_form(sep=0.1):
     """
@@ -8,9 +22,41 @@ def data_form(sep=0.1):
     """
     x=np.arange(0,10,sep)
     length_x=len(x)
-    epsilon= np.random.normal(2, 4, size=length_x)
-    y=x**2+x+epsilon 
-    return [x,y]
+    np.random.seed(4)
+    epsilon= np.random.normal(2, 1, size=length_x)
+    y=func_pow(x,0.5,3.3,2.3) 
+    y=y + epsilon
+    return np.array([x,y])
+def RSS_relative_analysis(y,y_predict):
+    """
+    #* 返回一个顺序为：RSS残差平方和,sigma^2:均值为0的正太分布的方差的最小二乘estimate,R^2:决定系数  的np数组
+    Args:
+        y ([type]): 原始y的数据
+        y_predict ([type]): 拟合后y的数据
+    """
+    RSS= np.sum((y-y_predict)**2)
+    SS_y=len(y)*np.var(y)
+    R_2=(SS_y-RSS)/SS_y
+    sigma_2 = RSS/(len(y)-1)
+    return np.array([RSS,sigma_2,R_2])
+def func_pow(x,a,b,c):
+    """
+    #*幂函数，返回a*x^c + b
+    """
+    return a * x ** c + b
+def func_exp(x,a,b,c):
+    """
+    #*指数函数，返回a*exp(cx) + b
+    """
+    return a * np.exp(c * x) + b
+def func_log(x,a,b,c):
+    """
+    #*对数函数，返回a*log(x+c) + b
+    """
+    return a * np.log(x + c) + b
+
+#*--------------------------------------------------------主要函数
+#! 多项式回归(包含简单线性回归)
 def simple_linear(x=None,y=None,degree=1):
     """
     #* 支持2维数据的拟合，简单线性拟合，并且返回一个参数列表
@@ -40,7 +86,46 @@ def simple_linear_predict(x=None,coe=None):
     for i in range(0,coe_l):
         y += coe[i]*x**(coe_l-1-i) #* 例如coe[0]表示最高次项系数 coe[len(coe)-1]表示常数项系数
     return y #* 完成predict
+
+
+#! 幂回归(特指y=ax^c + b)
+def pow_regression(x=None,y=None):
+    popt, pcov = curve_fit(func_pow, x, y)
+    return popt
+def pow_predict(x,a,b,c):
+    """
+    #* 传入三个参数，一般为对应的LS估计，并返回对应的值或者数组
+    """
+    y_predict=func_pow(x,a,b,c)
+    return y_predict
+
+
+#! 指数回归(特指y=ae^x + b)
+def exp_regression(x=None,y=None):
+    popt, pcov = curve_fit(func_exp, x, y)
+    return popt
+def exp_predict(x,a,b,c):
+    """
+    #* 传入三个参数，一般为对应的LS估计，并返回对应的值或者数组
+    """
+    y_predict=func_exp(x,a,b,c)
+    return y_predict
+
+
+#! 对数回归(特指y=alog(x+c) + b)
+def log_regression(x=None,y=None):
+    popt, pcov = curve_fit(func_log, x, y)
+    return popt
+
+
+def log_predict(x,a,b,c):
+    """
+    #* 传入三个参数，一般为对应的LS估计，并返回对应的值或者数组
+    """
+    y_predict=func_log(x,a,b,c)
+    return y_predict
 if  __name__== "__main__" :
     test_data=data_form()
-    result=simple_linear(test_data[0],test_data[1],degree=2)
+    result=pow_regression(x=test_data[0],y=test_data[1])
     print(result)
+    data_write(test_data)

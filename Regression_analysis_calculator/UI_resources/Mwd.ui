@@ -114,18 +114,52 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QComboBox" name="modual_choose">
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
-        <property name="text">
-         <string>简单线性回归</string>
-        </property>
+        <widget class="QComboBox" name="modual_choose">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>3</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <item>
+          <property name="text">
+           <string>简单线性回归</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>多项式拟合</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>幂拟合</string>
+          </property>
+         </item>
+        </widget>
        </item>
        <item>
-        <property name="text">
-         <string>多项式拟合</string>
-        </property>
+        <widget class="QLineEdit" name="degree_input">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="placeholderText">
+          <string>输入degree</string>
+         </property>
+        </widget>
        </item>
-      </widget>
+      </layout>
      </item>
     </layout>
    </widget>
@@ -315,7 +349,7 @@
         </font>
        </property>
        <property name="text">
-        <string>LS(sigma):</string>
+        <string>LS(sigma^2):</string>
        </property>
       </widget>
      </item>
@@ -350,15 +384,7 @@
       <height>761</height>
      </rect>
     </property>
-    <layout class="QFormLayout" name="figure_layout">
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <layout class="QFormLayout" name="figure_layout"/>
    </widget>
    <widget class="QPushButton" name="btDraw">
     <property name="geometry">
@@ -427,7 +453,7 @@
    </widget>
    <widget class="QTextEdit" name="y_preview">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
@@ -453,7 +479,7 @@ p, li { white-space: pre-wrap; }
    </widget>
    <widget class="QTextEdit" name="x_preview">
     <property name="enabled">
-     <bool>false</bool>
+     <bool>true</bool>
     </property>
     <property name="geometry">
      <rect>
