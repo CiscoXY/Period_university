@@ -2,7 +2,7 @@ from pandas import DataFrame, read_csv
 import numpy as np
 from scipy.optimize import curve_fit
 #*----------------------------------------------------------------功能型函数
-def data_read(path="data.txt",sep="\t",head=0,):
+def data_read(path="data.txt",sep="\t",head=0):
     """
     #*用pandas读取txt文件，间隔默认为'\t',默认没有表头
     """
@@ -15,16 +15,29 @@ def data_write(data,path="data.txt",sep='\t'):
     df=DataFrame(data.transpose(),columns=['x','y'])
     df.to_csv(path,sep=sep,index=False)
 
+def parameters_write(data,path="result.txt",sep="\t"):
+    """
+    #* 利用pandas将data写到文件中去
+    """
+    p=["参数"]
+    p.extend(data[0])#* data[0]中存储的是参数数据
+    p=DataFrame(p)
+    p.to_csv(path,sep=sep,index=False,header=False)
+    print(data[1:])
+    df=np.array([["Var(y):","Mean(y):","RSS:","sigma^2的LS:","决定系数R^2:"],data[1:]])
+    df=DataFrame(df.transpose())
+    df.to_csv(path,sep=sep,index=False,header=False,mode='a')
 
 def data_form(sep=0.1):
     """
     #*产生测试数据
     """
-    x=np.arange(0,10,sep)
+    start=sep
+    x=np.arange(start,10,sep)
     length_x=len(x)
     np.random.seed(4)
-    epsilon= np.random.normal(2, 1, size=length_x)
-    y=func_pow(x,0.5,3.3,2.3) 
+    epsilon= 0.1*np.random.normal(2, 1, size=length_x)
+    y=func_log(x,0.5,3.3,2.3) 
     y=y + epsilon
     return np.array([x,y])
 def RSS_relative_analysis(y,y_predict):
@@ -48,12 +61,12 @@ def func_exp(x,a,b,c):
     """
     #*指数函数，返回a*exp(cx) + b
     """
-    return a * np.exp(c * x) + b
+    return a * np.exp(c*x) + b
 def func_log(x,a,b,c):
     """
     #*对数函数，返回a*log(x+c) + b
     """
-    return a * np.log(x + c) + b
+    return a * np.log(x+c) + b
 
 #*--------------------------------------------------------主要函数
 #! 多项式回归(包含简单线性回归)
@@ -90,7 +103,7 @@ def simple_linear_predict(x=None,coe=None):
 
 #! 幂回归(特指y=ax^c + b)
 def pow_regression(x=None,y=None):
-    popt, pcov = curve_fit(func_pow, x, y)
+    popt, pcov = curve_fit(func_pow, x, y,maxfev = 10000)
     return popt
 def pow_predict(x,a,b,c):
     """
@@ -102,7 +115,7 @@ def pow_predict(x,a,b,c):
 
 #! 指数回归(特指y=ae^x + b)
 def exp_regression(x=None,y=None):
-    popt, pcov = curve_fit(func_exp, x, y)
+    popt, pcov = curve_fit(func_exp, x, y,maxfev = 10000)
     return popt
 def exp_predict(x,a,b,c):
     """
@@ -114,7 +127,7 @@ def exp_predict(x,a,b,c):
 
 #! 对数回归(特指y=alog(x+c) + b)
 def log_regression(x=None,y=None):
-    popt, pcov = curve_fit(func_log, x, y)
+    popt, pcov = curve_fit(func_log, x, y,maxfev = 10000)
     return popt
 
 
