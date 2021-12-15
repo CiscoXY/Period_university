@@ -39,7 +39,7 @@ class MAIN_UI(QtWidgets.QMainWindow):
         self.canvas = FigureCanvas(self.figure)#* 建立对象
         self.ui.figure_layout.addWidget(self.canvas)#* 并且添加
         self.canvas.draw()
-        plt.savefig("原始数据.png")
+        plt.savefig("data\原始数据.png")
         #*连接信号与槽
         self.ui.path_verify.clicked.connect(self.path_input_abled)
         self.ui.path_input.clicked.connect(self.data_load)
@@ -220,7 +220,7 @@ class MAIN_UI(QtWidgets.QMainWindow):
         #*保存画出来的图片
         if(self.png_path_T_or_F()==False):
             global picture_num
-            save_name=str(picture_num)+".png"
+            save_name="data/"+str(picture_num)+".png"
             picture_num += 1
             plt.savefig(save_name)
         else:
@@ -249,7 +249,7 @@ class MAIN_UI(QtWidgets.QMainWindow):
         #*保存画出来的图片
         if(self.png_path_T_or_F()==False):
             global picture_num
-            save_name=str(picture_num)+".png"
+            save_name="data/"+str(picture_num)+".png"
             picture_num += 1
             plt.savefig(save_name)
         else:

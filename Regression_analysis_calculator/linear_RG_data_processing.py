@@ -2,7 +2,7 @@ from pandas import DataFrame, read_csv
 import numpy as np
 from scipy.optimize import curve_fit
 #*----------------------------------------------------------------功能型函数
-def data_read(path="data.txt",sep="\t",head=0):
+def data_read(path="data\data.txt",sep="\t",head=0):
     """
     #*用pandas读取txt文件，间隔默认为'\t',默认没有表头
     """
@@ -11,11 +11,11 @@ def data_read(path="data.txt",sep="\t",head=0):
     return df
 
 
-def data_write(data,path="data.txt",sep='\t'):
+def data_write(data,path="data\data.txt",sep='\t'):
     df=DataFrame(data.transpose(),columns=['x','y'])
     df.to_csv(path,sep=sep,index=False)
 
-def parameters_write(data,path="result.txt",sep="\t"):
+def parameters_write(data,path="data/result.txt",sep="\t"):
     """
     #* 利用pandas将data写到文件中去
     """
