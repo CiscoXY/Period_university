@@ -1,5 +1,0 @@
-Controller名称:
-fx:controller="Demo.src.Controller"
-
-
-Parent root = FXMLLoader.load(getClass().getResource("GUI.fxml"));
